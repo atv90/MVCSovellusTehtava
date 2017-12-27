@@ -1,0 +1,31 @@
+﻿<!--Toteutettu malliolion kautta-->
+@model IEnumerable<MVCSovellusTehtavaAnneVaittinen.Models.Henkilot>
+@{
+    ViewBag.Title = "Henkilöt";
+}
+
+<h2>Henkilöt</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Henkilö id</th>
+            <th>Etunimi</th>
+            <th>Sukunimi</th>
+            <th>Osoite</th>
+            <th>Esimies</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (MVCSovellusTehtavaAnneVaittinen.Models.Henkilot henk in Model)
+         {
+            <tr>
+                <th>@henk.HenkiloId</th>
+                <th>@henk.Etunimi</th>
+                <th>@henk.Sukunimi</th>
+                <th>@henk.Osoite</th>
+                <th>@henk.Esimies</th>
+            </tr>
+        }
+    </tbody>
+</table>

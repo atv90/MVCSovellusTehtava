@@ -16,5 +16,6 @@ namespace MVCSovellusTehtavaAnneVaittinen.Models
     {
         public int ProjektiId { get; set; }
         public string Nimi { get; set; }
+        public object Projektit2 { get; internal set; }
     }
 }

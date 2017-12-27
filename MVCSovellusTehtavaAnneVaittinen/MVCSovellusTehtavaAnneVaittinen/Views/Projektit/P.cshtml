@@ -1,4 +1,5 @@
-﻿@{
+﻿<!--Toteutettu Ajax-kutsulla-->
+@{
     ViewBag.Title = "Projektit";
 }
 @section scripts {
@@ -6,13 +7,13 @@
         $(function () {
             $.getJSON("/projektit/getlist", null, function (json) {
                 var projektit = JSON.parse(json);
-                alert("test" + projektit.length);
+                //alert("test" + projektit.length);
                 var html = "";
-                for (var projekti = 0; projekti < projekti.length; projekti++) {
+                for (var projekti = 0; projekti < projektit.length; projekti++) {
                     html += "<tr>" +
-                            "<td>" + + "</td>" +
-                            "<td>" + + "</td>" 
-                            "</tr>";
+                        "<td>" + projektit[projekti].ProjektiId + "</td>" +
+                        "<td>" + projektit[projekti].Nimi + "</td>" 
+                            "</tr>\r\n";
                 }
                 $("#projektitList tbody").html(html);
             });
