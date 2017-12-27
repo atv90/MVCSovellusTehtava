@@ -1,7 +1,24 @@
 ﻿@{
     ViewBag.Title = "Projektit";
 }
-
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/projektit/getlist", null, function (json) {
+                var projektit = JSON.parse(json);
+                alert("test" + projektit.length);
+                var html = "";
+                for (var projekti = 0; projekti < projekti.length; projekti++) {
+                    html += "<tr>" +
+                            "<td>" + + "</td>" +
+                            "<td>" + + "</td>" 
+                            "</tr>";
+                }
+                $("#projektitList tbody").html(html);
+            });
+        });
+    </script>
+    }
 <h2>Projektit</h2>
 <table class="table table-bordered" id="projektitList">
     <thead>
