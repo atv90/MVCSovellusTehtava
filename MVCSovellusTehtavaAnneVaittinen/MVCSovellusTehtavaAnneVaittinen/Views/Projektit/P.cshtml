@@ -4,19 +4,27 @@
 }
 @section scripts {
     <script type="text/javascript">
-        $(function () {
+
+        function päivitäProjektilistaus() {
             $.getJSON("/projektit/getlist", null, function (json) {
                 var projektit = JSON.parse(json);
                 //alert("test" + projektit.length);
                 var html = "";
                 for (var projekti = 0; projekti < projektit.length; projekti++) {
                     html += "<tr>" +
+                        //lisätään muokkauspainikelinkki, huom vastaavaan kohtaan taulukko
+                        //pohjaa alhaalla lisätään tyhjäsarake
+                        "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
                         "<td>" + projektit[projekti].ProjektiId + "</td>" +
-                        "<td>" + projektit[projekti].Nimi + "</td>" 
-                            "</tr>\r\n";
+                        "<td>" + projektit[projekti].Nimi + "</td>"
+                    "</tr>\r\n";
                 }
                 $("#projektitList tbody").html(html);
             });
+        }
+        //sivun alustaminen, mitä tehdään kun sivusto aukeaa
+        $(function () {
+            päivitäProjektilistaus(); 
         });
     </script>
     }
@@ -24,6 +32,7 @@
 <table class="table table-bordered" id="projektitList">
     <thead>
         <tr>
+            <th></th>
             <th>Projekti id</th>
             <th>Nimi</th>
         </tr>

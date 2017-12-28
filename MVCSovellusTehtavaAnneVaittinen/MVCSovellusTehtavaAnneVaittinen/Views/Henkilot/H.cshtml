@@ -1,14 +1,42 @@
-﻿<!--Toteutettu malliolion kautta-->
-@model IEnumerable<MVCSovellusTehtavaAnneVaittinen.Models.Henkilot>
+﻿<!--Toteutettu Ajax-kutsulla-->
 @{
     ViewBag.Title = "Henkilöt";
 }
+@section scripts {
+<script type="text/javascript">
 
+        function päivitäHenkilölistaus() {
+            $.getJSON("/henkilot/getlist", null, function (json) {
+                var henkilot = JSON.parse(json);
+                //alert("test" + henkilot.length);
+                var html = "";
+                for (var henkilo = 0; henkilo < henkilot.length; henkilo++) {
+                    html += "<tr>" +
+                        //lisätään muokkauspainikelinkki, huom vastaavaan kohtaan taulukko
+                        //pohjaa alhaalla lisätään tyhjäsarake
+                        "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
+                        "<td>" + henkilot[henkilo].HenkiloId +"</td>" +
+                        "<td>" + henkilot[henkilo].Etunimi + "</td>"+
+                        "<td>" + henkilot[henkilo].Sukunimi + "</td>"+
+                        "<td>" + henkilot[henkilo].Osoite + "</td>" +
+                        "<td>" + henkilot[henkilo].Esimies + "</td>" 
+                    "</tr>\r\n";
+                }
+                $("#henkilotList tbody").html(html);
+            });
+        }
+        //sivun alustaminen, mitä tehdään kun sivusto aukeaa
+        $(function () {
+            päivitäHenkilölistaus();
+        });
+</script>
+    }
 <h2>Henkilöt</h2>
 
-<table class="table table-striped">
+<table class="table table-striped" id="henkilotList">
     <thead>
         <tr>
+            <th></th>
             <th>Henkilö id</th>
             <th>Etunimi</th>
             <th>Sukunimi</th>
@@ -17,15 +45,5 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (MVCSovellusTehtavaAnneVaittinen.Models.Henkilot henk in Model)
-         {
-            <tr>
-                <th>@henk.HenkiloId</th>
-                <th>@henk.Etunimi</th>
-                <th>@henk.Sukunimi</th>
-                <th>@henk.Osoite</th>
-                <th>@henk.Esimies</th>
-            </tr>
-        }
     </tbody>
 </table>

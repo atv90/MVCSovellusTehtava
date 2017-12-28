@@ -20,6 +20,7 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
 
         {
             HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
+            
             var model = (from p in entities.Projektit
                          select new
                          {
