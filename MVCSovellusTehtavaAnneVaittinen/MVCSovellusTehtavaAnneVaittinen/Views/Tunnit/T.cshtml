@@ -1,0 +1,40 @@
+﻿<!--Toteutettu Ajax-kutsulla-->
+<!--EI TOIMI NIIN KUIN PITÄISI-->
+@{
+    ViewBag.Title = "Tunnit";
+}
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/tunnit/getlist", null, function (json) {
+                var tunnit = JSON.parse(json);
+                var html = "";
+                for (var t = 0; t < tunnit.length; t++) {
+                    html +=" < tr >"+
+                        "<th>"+ tunnit[t].TuntiId +"</th>"+
+                        "<th>"+ tunnit[t].ProjektiId +"</th>"+
+                        "<th>"+ tunnit[t].HenkiloId +"</th>"+
+                        "<th>"+ tunnit[t].Pvm +"</th>"+
+                        "<th>"+ tunnit[t].Tunnit +"</th>"
+                        "</tr>\r\n";
+                }
+                $("#tunnitList tbody").html(html);
+            });
+        });
+    </script>
+    }
+<h2>Tunnit</h2>
+
+<h2>Projektit</h2>
+<table class="table table-bordered" id="tunnitList">
+    <thead>
+        <tr>
+            <th>Tunti id</th>
+            <th>Projekti id</th>
+            <th>Henkilö id</th>
+            <th>Pvm</th>
+            <th>Tunnit</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
