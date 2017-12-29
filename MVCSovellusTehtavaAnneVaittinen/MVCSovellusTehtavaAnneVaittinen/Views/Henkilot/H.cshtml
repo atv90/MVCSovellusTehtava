@@ -3,7 +3,7 @@
     ViewBag.Title = "Henkilöt";
 }
 @section scripts {
-<script type="text/javascript">
+    <script type="text/javascript">
 
         function päivitäHenkilölistaus() {
             $.getJSON("/henkilot/getlist", null, function (json) {
@@ -15,22 +15,69 @@
                         //lisätään muokkauspainikelinkki, huom vastaavaan kohtaan taulukko
                         //pohjaa alhaalla lisätään tyhjäsarake
                         "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
-                        "<td>" + henkilot[henkilo].HenkiloId +"</td>" +
-                        "<td>" + henkilot[henkilo].Etunimi + "</td>"+
-                        "<td>" + henkilot[henkilo].Sukunimi + "</td>"+
+                        "<td>" + henkilot[henkilo].HenkiloId + "</td>" +
+                        "<td>" + henkilot[henkilo].Etunimi + "</td>" +
+                        "<td>" + henkilot[henkilo].Sukunimi + "</td>" +
                         "<td>" + henkilot[henkilo].Osoite + "</td>" +
-                        "<td>" + henkilot[henkilo].Esimies + "</td>" 
+                        "<td>" + henkilot[henkilo].Esimies + "</td>"
                     "</tr>\r\n";
                 }
                 $("#henkilotList tbody").html(html);
+
+                //lisätään tietojen muokkausikkuna
+                //piste tarkoittaa luokkaa
+                $(".glyphicon-pencil").click(function () {
+                    //etsitään tiedot klikatulta riviltä-MODAALI-IKKUNAN LUONTI
+                    var henkiloId = $(this).parent().parent().next().text();
+                    alert(henkiloId);
+
+                    //haetaan tiedot id:n perusteella-MODAALI-IKKUNAN LUONTI
+                    $.getJSON("/henkilot/getsinglehenkilo/" + henkiloId, null, function (json2) {
+                        var henkilo = JSON.parse(json2);
+
+                        // kopioidaan tiedot ikkunaan-MODAALI-IKKUNAN LUONTI
+                        $("#henkiloModal_HenkiloId").val(henkilo.HenkiloId);
+                        $("#henkiloModal_Etunimi").val(henkilo.Etunimi);
+                        $("#henkiloModal_Sukunimi").val(henkilo.Sukunimi);
+                        $("#henkiloModal_Osoite").val(henkilo.Osoite);
+                        $("#henkiloModal_Esimies").val(henkilo.Esimies);
+
+                        // näytetään ikkuna ja haluttu otsikko-MODAALI-IKKUNAN LUONTI
+                        $("#henkiloModalTitle").text("Muokkaa henkilöä");
+                        $("#henkiloModalDialog").modal("show");
+                    });
+                });
             });
         }
         //sivun alustaminen, mitä tehdään kun sivusto aukeaa
         $(function () {
             päivitäHenkilölistaus();
+
+            //-MODAALI-IKKUNAN LUONTI
+            $("#henkiloModalSaveButton").click(function () {
+                // luetaan käyttäjän syöttämät kentät
+                var details = {
+                    HenkiloId: $("#henkiloModal_HenkiloId").val(),
+                    Etunimi: $("#henkiloModal_Etunimi").val(),
+                    Sukunimi: $("#henkiloModal_Sukunimi").val(),
+                    Osoite: $("#henkiloModal_Osoite").val(),
+                    Esimies: $("#henkiloModal_Esimies").val()
+                };
+                //tietojen päivitys ja uusien tietojen lisäys
+                $.post("/henkilot/update/", details, function (status) {
+                    if (status == true) {
+                        alert("Uudet tiedot tallennettu!");
+                        $("#henkiloModalDialog").modal("hide");
+                        päivitäHenkilölistaus();
+                    }
+                    else {
+                        alert("Tallennus ei onnistunut, kokeile uudestaan.");
+                    }
+                });
+            });
         });
-</script>
-    }
+    </script>
+}
 <h2>Henkilöt</h2>
 
 <table class="table table-striped" id="henkilotList">
@@ -44,6 +91,47 @@
             <th>Esimies</th>
         </tr>
     </thead>
-    <tbody>
-    </tbody>
+    <tbody></tbody>
 </table>
+
+<!---MODAALI-IKKUNAN LUONTI-->
+<!--https://getbootstrap.com/docs/4.0/components/modal/-->
+<div class="modal" tabindex="-1" role="dialog" id="henkiloModalDialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><span id="henkiloModalTitle">Muokkaa henkilöä</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">Henkilö-id</div>
+                    <div class="col-md-6"><input class="form-control" id="henkiloModal_HenkiloId" type="text" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Etunimi</div>
+                    <div class="col-md-6"><input class="form-control" id="henkiloModal_Etunimi" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Sukunimi</div>
+                    <div class="col-md-6"><input class="form-control" id="henkiloModal_Sukunimi" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Osoite</div>
+                    <div class="col-md-6"><input class="form-control" id="henkiloModal_Osoite" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Esimies</div>
+                    <div class="col-md-6"><input class="form-control" id="henkiloModal_Esimies" type="text"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+                <button type="button" class="btn btn-primary" id="henkiloModalSaveButton">Tallenna</button>
+            </div>
+        </div>
+    </div>
+</div>

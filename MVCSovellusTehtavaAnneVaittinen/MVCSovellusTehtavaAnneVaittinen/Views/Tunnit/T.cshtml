@@ -26,7 +26,7 @@
                 $(".glyphicon-pencil").click(function () {
                     //etsitään tiedot klikatulta riviltä-MODAALI-IKKUNAN LUONTI
                     var tuntiId = $(this).parent().parent().next().text();
-                    alert(TuntiId);
+                    alert(tuntiId);
 
                     //haetaan tiedot id:n perusteella-MODAALI-IKKUNAN LUONTI
                     $.getJSON("/tunnit/getsingletunti/" + tuntiId, null, function (json2) {
