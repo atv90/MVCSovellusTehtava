@@ -16,7 +16,8 @@
                         "<td>" + tunnit[t].ProjektiId + "</td>" +
                         "<td>" + tunnit[t].HenkiloId + "</td>" +
                         "<td>" + tunnit[t].Pvm + "</td>" +
-                        "<td>" + tunnit[t].Tunnit + "</td>"
+                        "<td>" + tunnit[t].Tunnit + "</td>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td >" +
                     "</tr>\r\n";
                 }
                 $("#tunnitList tbody").html(html);
@@ -44,6 +45,25 @@
                         $("#tuntiModalTitle").text("Muokkaa tunteja");
                         $("#tuntiModalDialog").modal("show");
                     });
+                });
+                // tietojen poisto
+                $(".glyphicon-trash").click(function () {
+                    // etsitään tiedot klikatulta riviltä
+                    console.log("Poistoa klikattu");
+                    var tuntiId = $(this).parent().parent().prev().prev().prev().prev().prev().text();
+                    var ok = confirm("Haluatko varmasti poistaa tunti-id:n " + tuntiId + "?");
+
+                    if (ok == true) {
+                        $.getJSON("/tunnit/delete/" + tuntiId, null, function (status) {
+                            if (status == true) {
+                                alert("Tunnit on nyt poistettu!");
+                                päivitätuntilistaus();
+                            }
+                            else {
+                                alert("Poistaminen ei onnistunut, yritä uudelleen!");
+                            }
+                        });
+                    }
                 });
             });
         }

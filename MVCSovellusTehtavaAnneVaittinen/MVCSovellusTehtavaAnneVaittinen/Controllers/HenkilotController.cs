@@ -106,7 +106,7 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
         {
             HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
 
-            // etsitään id:n perusteella asiakasrivi kannasta
+            // etsitään id:n perusteella rivi kannasta
             bool OK = false;
             Henkilot dbItem = (from h in entities.Henkilot
                                 where h.HenkiloId == id

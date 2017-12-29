@@ -16,7 +16,8 @@
                         //pohjaa alhaalla lisätään tyhjäsarake
                         "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
                         "<td>" + projektit[projekti].ProjektiId + "</td>" +
-                        "<td>" + projektit[projekti].Nimi + "</td>"
+                        "<td>" + projektit[projekti].Nimi + "</td>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td >" +
                     "</tr>\r\n";
                 }
                 $("#projektitList tbody").html(html);
@@ -41,6 +42,26 @@
                         $("#projektiModalDialog").modal("show");
                     });
                 });
+                // tietojen poisto
+                $(".glyphicon-trash").click(function () {
+                    // etsitään  tiedot klikatulta riviltä
+                    console.log("Poistoa klikattu");
+                    var projektiId = $(this).parent().parent().prev().prev().prev().prev().text();
+                    var ok = confirm("Haluatko varmasti poistaa projektin" + projektiId + "?");
+
+                    if (ok == true) {
+                        $.getJSON("/projektit/delete/" + projektiId, null, function (status) {
+                            if (status == true) {
+                                alert("Projekti on nyt poistettu!");
+                                päivitäProjektilistaus();
+                            }
+                            else {
+                                alert("Poistaminen ei onnistunut, yritä uudelleen!");
+                            }
+                        });
+                    }
+                });
+
             });
         }
         //sivun alustaminen, mitä tehdään kun sivusto aukeaa

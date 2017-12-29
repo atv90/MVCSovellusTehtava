@@ -99,5 +99,26 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
             entities.Dispose();
             return Json(OK, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Delete(int id)
+        {
+            HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
+
+            // etsitään id:n perusteella rivi kannasta
+            bool OK = false;
+            Tunnit dbItem = (from t in entities.Tunnit
+                               where t.TuntiId == id
+                               select t).FirstOrDefault();
+            if (dbItem != null)
+            {
+                // tietokannasta poisto
+                entities.Tunnit.Remove(dbItem);
+                entities.SaveChanges();
+                OK = true;
+            }
+            entities.Dispose();
+
+            return Json(OK, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
