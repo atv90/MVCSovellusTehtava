@@ -97,7 +97,7 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
                 }
             }
             entities.Dispose();
-            return Json(OK);
+            return Json(OK, JsonRequestBehavior.AllowGet);
         }
     }
 }

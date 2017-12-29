@@ -19,8 +19,9 @@
                         "<td>" + henkilot[henkilo].Etunimi + "</td>" +
                         "<td>" + henkilot[henkilo].Sukunimi + "</td>" +
                         "<td>" + henkilot[henkilo].Osoite + "</td>" +
-                        "<td>" + henkilot[henkilo].Esimies + "</td>"
-                    "</tr>\r\n";
+                        "<td>" + henkilot[henkilo].Esimies + "</td>"+
+                        "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td >" +
+                        "</tr>\r\n";
                 }
                 $("#henkilotList tbody").html(html);
 
@@ -47,6 +48,26 @@
                         $("#henkiloModalDialog").modal("show");
                     });
                 });
+                // tietojen poisto
+                $(".glyphicon-trash").click(function () {
+                    // etsitään asiakkaan tiedot klikatulta riviltä
+                    console.log("Poistoa klikattu");
+                    var henkiloId = $(this).parent().parent().prev().prev().prev().prev().text();
+                    var ok = confirm("Haluatko varmasti poistaa asiakkaan " + henkiloId + "?");
+
+                    if (ok == true) {
+                        $.getJSON("/customer/delete/" + henkiloId, null, function (status) {
+                            if (status == true) {
+                                alert("Asiakas on nyt poistettu!");
+                                päivitäHenkilölistaus();
+                            }
+                            else {
+                                alert("Poistaminen ei onnistunut, yritä uudelleen!");
+                            }
+                        });
+                    }
+                });
+
             });
         }
         //sivun alustaminen, mitä tehdään kun sivusto aukeaa

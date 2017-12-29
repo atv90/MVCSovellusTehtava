@@ -100,7 +100,28 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
                 }
             }
             entities.Dispose();
-            return Json(OK);
+            return Json(OK, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Delete(int id)
+        {
+            HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
+
+            // etsitään id:n perusteella asiakasrivi kannasta
+            bool OK = false;
+            Henkilot dbItem = (from h in entities.Henkilot
+                                where h.HenkiloId == id
+                                select h).FirstOrDefault();
+            if (dbItem != null)
+            {
+                // tietokannasta poisto
+                entities.Henkilot.Remove(dbItem);
+                entities.SaveChanges();
+                OK = true;
+            }
+            entities.Dispose();
+
+            return Json(OK, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
