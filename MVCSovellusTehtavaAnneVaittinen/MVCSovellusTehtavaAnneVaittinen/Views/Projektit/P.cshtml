@@ -6,7 +6,7 @@
     <script type="text/javascript">
 
         function päivitäProjektilistaus() {
-             $.getJSON("/projektit/getlist", null, function (json) {
+            $.getJSON("/projektit/getlist", null, function (json) {
                 var projektit = JSON.parse(json);
                 //alert("test" + projektit.length);
                 var html = "";
@@ -43,46 +43,45 @@
                 });
             });
         }
-            //sivun alustaminen, mitä tehdään kun sivusto aukeaa
-            $(function () {
-                päivitäProjektilistaus();
+        //sivun alustaminen, mitä tehdään kun sivusto aukeaa
+        $(function () {
+            päivitäProjektilistaus();
 
-                //uuden tiedon lisääminen kutsutaan funktiota
-                $("#lisääUusiProjektiNappi").click(function () {
+            //uusien henkilöiden lisääminen manuaalisesti
+            $("#lisääUusiProjektiNappi").click(function () {
 
-                    //tyhjennetään ikkunan syöttökenttien tiedot
-                    $("#projektiModal_ProjektiId").val("(Luodaan automaattisesti)");
-                    $("#projektiModal_Nimi").val("");
+                // tyhjennetään ikkunan tiedot
+                $("#projektiModal_ProjektiId").val("(lisätään automaattisesti)");
+                $("#projektiModal_Nimi").val("");
 
-                    //modaali-ikkunan otsikko
-                    $("#projektiModalTitle").text("Lisää uusi projekti");
+                //modaali-ikkunan otsikkokenttä
+                $("#projektiModalTitle").text("Lisää uusi henkilö");
+                //näytetään ikkuna
+                $("#projektiModalDialog").modal("show");
+            });
 
-                    //näytetään ikkuna
-                    $("projektiModalDialog").modal("show");
-                });
 
-        
-                //-MODAALI-IKKUNAN LUONTI
-                $("#projektiModalSaveButton").click(function () {
-                    // luetaan käyttäjän syöttämät kentät
-                    var details = {
-                        ProjektiId: $("#projektiModal_ProjektiId").val(),
-                        Nimi: $("#projektiModal_Nimi").val(),
-                    };
-                    //tietojen päivitys ja uusien tietojen lisäys
-                    $.post("/projektit/update/", details, function (status) {
-                        if (status == true) {
-                            alert("Uudet tiedot tallennettu!");
-                            $("#projektiModalDialog").modal("hide");
-                            päivitäProjektilistaus();
-                        }
-                        else {
-                            alert("Tallennus ei onnistunut, kokeile uudestaan.");
-                        }
-                    });
+            //-MODAALI-IKKUNAN LUONTI
+            $("#projektiModalSaveButton").click(function () {
+                // luetaan käyttäjän syöttämät kentät
+                var details = {
+                    ProjektiId: $("#projektiModal_ProjektiId").val(),
+                    Nimi: $("#projektiModal_Nimi").val(),
+                };
+                //tietojen päivitys ja uusien tietojen lisäys
+                $.post("/projektit/update/", details, function (status) {
+                    if (status == true) {
+                        alert("Uudet tiedot tallennettu!");
+                        $("#projektiModalDialog").modal("hide");
+                        päivitäProjektilistaus();
+                    }
+                    else {
+                        alert("Tallennus ei onnistunut, kokeile uudestaan.");
+                    }
                 });
             });
-        
+        });
+
     </script>
 }
 <h2>Projektit</h2>
