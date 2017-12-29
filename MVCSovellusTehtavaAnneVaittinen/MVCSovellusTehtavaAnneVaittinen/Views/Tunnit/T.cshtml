@@ -20,14 +20,66 @@
                     "</tr>\r\n";
                 }
                 $("#tunnitList tbody").html(html);
-                
+
+                //lisätään tietojen muokkausikkuna
+                //piste tarkoittaa luokkaa
+                $(".glyphicon-pencil").click(function () {
+                    //etsitään tiedot klikatulta riviltä-MODAALI-IKKUNAN LUONTI
+                    var tuntiId = $(this).parent().parent().next().text();
+                    alert(TuntiId);
+
+                    //haetaan tiedot id:n perusteella-MODAALI-IKKUNAN LUONTI
+                    $.getJSON("/tunnit/getsingletunti/" + tuntiId, null, function (json2) {
+                        var tunti = JSON.parse(json2);
+
+                        // kopioidaan tiedot ikkunaan-MODAALI-IKKUNAN LUONTI
+                        $("#tuntiModal_TuntiId").val(tunti.TuntiId);
+                        $("#tuntiModal_ProjektiId").val(tunti.ProjektiId);
+                        $("#tuntiModal_HenkiloId").val(tunti.HenkiloId);
+                        $("#tuntiModal_Pvm").val(tunti.Pvm);
+                        $("#tuntiModal_Tunnit").val(tunti.Tunnit);
+
+
+                        // näytetään ikkuna ja haluttu otsikko-MODAALI-IKKUNAN LUONTI
+                        $("#tuntiModalTitle").text("Muokkaa tunteja");
+                        $("#tuntiModalDialog").modal("show");
+                    });
+                });
+
+
             });
         }
+        //sivun alustaminen
         $(function () {
             päivitäTuntilistaus();
+
+            //modaali-ikkuna, tallenna-napin painaminen
+            $("#tuntiModalTallennaNappi").click(function () {
+                //luetaan käyttäjän syöttämät kentät
+                var syötteet = {
+                    TuntiId: $("#tuntiModal_TuntiId").val(),
+                    ProjektiId: $("#tuntiModal_ProjektiId").val(),
+                    HenkilöId: $("#tuntiModal_HenkiloId").val(),
+                    Pvm: $("#tuntiModal_Pvm").val(),
+                    Tunnit: $("#tuntiModal_Tunnit").val()
+                };
+
+
+                //modaali-ikkuna, tietojen muokkaaminen
+                $.post("/tunnit/update/", syötteet, function (status) {
+                    if (status == true) {
+                        alert("Uudet tunnit tallennettu!");
+                        $("#tuntiModalDialog").modal("hide");
+                        päivitäTuntilistaus();
+                    }
+                    else {
+                        alert("Tallennus ei onnistunut, yritä uudelleen.")
+                    }
+                });
+            });
         });
     </script>
-    }
+}
 <h2>Tunnit</h2>
 
 <table class="table table-bordered" id="tunnitList">
@@ -43,3 +95,40 @@
     </thead>
     <tbody></tbody>
 </table>
+<!--modaali-ikkuna-->
+<div class="modal fade" tabindex="-1" role="dialog" id="tuntiModalDialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span id="tuntiModalTitle">Muokkaa tunteja</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">Tunti-id</div>
+                    <div class="col-md-6"><input class="form-control" id="tuntiModal_TuntiId" type="text" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Projekti-id</div>
+                    <div class="col-md-6"><input class="form-control" id="tuntiModal_ProjektiId" type="text" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Henkilö-id</div>
+                    <div class="col-md-6"><input class="form-control" id="tuntiModal_HenkiloId" type="text" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Pvm</div>
+                    <div class="col-md-6"><input class="form-control" id="tuntiModal_Pvm" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Tunnit</div>
+                    <div class="col-md-6"><input class="form-control" id="tuntiModal_Tunnit" type="text"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+                <button type="button" class="btn btn-primary" id="tuntiModalTallennaNappi">Tallenna</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

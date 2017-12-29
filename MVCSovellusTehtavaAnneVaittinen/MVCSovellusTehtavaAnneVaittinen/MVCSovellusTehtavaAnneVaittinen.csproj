@@ -240,7 +240,6 @@
     <Content Include="Views\Projektit\P.cshtml" />
     <Content Include="Views\Henkilot\H.cshtml" />
     <Content Include="Views\Tunnit\T.cshtml" />
-    <Content Include="Views\Tunnit\Tu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
