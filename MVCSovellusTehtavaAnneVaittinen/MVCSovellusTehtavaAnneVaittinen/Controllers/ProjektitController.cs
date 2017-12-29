@@ -49,26 +49,48 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
         }
         public ActionResult Update(Projektit proj)
         {
+
+
             HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
             //haetaan tietokannan rivi id:n perusteella
             int id = proj.ProjektiId;
 
             bool OK = false;
-            Projektit dbItem = (from p in entities.Projektit
-                                 where p.ProjektiId == id
-                                 select p).FirstOrDefault();
-            //kopioidaan selaimelta saadut tiedot tietokantaan, jos kentän arvo ei ole nolla
-            if (dbItem != null)
-            {
-                dbItem.ProjektiId = proj.ProjektiId;
-                dbItem.Nimi = proj.Nimi;
 
+            //Lisätäänkö uutta tietoa vai muokataanko vanhaa ehtolause
+            if (id.ToString() == ("(Luodaan automaattisesti)"))
+            {
+                //lisätään uusi
+                Projektit dbItem = new Projektit()
+                {
+                    ProjektiId = int.Parse(proj.Nimi.Substring(0,3).Trim().ToUpper()),
+                    Nimi = proj.Nimi
+                };
+                //tallennetaan uudet tiedot tietokantaan
+                entities.Projektit.Add(dbItem);
                 entities.SaveChanges();
-                //jos tietojen tallennus onnistuu asetetaan OK = true
                 OK = true;
             }
+            //muokataan vanhaa
+            else
+            {
+
+                Projektit dbItem = (from p in entities.Projektit
+                                    where p.ProjektiId == id
+                                    select p).FirstOrDefault();
+                //kopioidaan selaimelta saadut tiedot tietokantaan, jos kentän arvo ei ole nolla
+                if (dbItem != null)
+                {
+                    dbItem.ProjektiId = proj.ProjektiId;
+                    dbItem.Nimi = proj.Nimi;
+
+                    entities.SaveChanges();
+                    //jos tietojen tallennus onnistuu asetetaan OK = true
+                    OK = true;
+                }
+            }
             entities.Dispose();
-            return Json(OK, JsonRequestBehavior.AllowGet);
+            return Json(OK);
         }
     }
 }
