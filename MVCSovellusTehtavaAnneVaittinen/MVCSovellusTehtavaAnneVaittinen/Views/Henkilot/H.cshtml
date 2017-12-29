@@ -53,6 +53,23 @@
         $(function () {
             päivitäHenkilölistaus();
 
+            //uusien henkilöiden lisääminen manuaalisesti
+            $("#lisääUusiHenkilöNappi").click(function () {
+
+                // tyhjennetään ikkunan tiedot
+                $("#henkiloModal_HenkiloId").val("(lisätään automaattisesti)");
+                $("#henkiloModal_Etunimi").val("");
+                $("#henkiloModal_Sukunimi").val("");
+                $("#henkiloModal_Osoite").val("");
+                $("#henkiloModal_Esimies").val("");
+
+                //modaali-ikkunan otsikkokenttä
+                $("#henkiloModalTitle").text("Lisää uusi henkilö");
+                //näytetään ikkuna
+                $("#henkiloModalDialog").modal("show");
+            });
+
+
             //-MODAALI-IKKUNAN LUONTI
             $("#henkiloModalSaveButton").click(function () {
                 // luetaan käyttäjän syöttämät kentät
@@ -79,6 +96,7 @@
     </script>
 }
 <h2>Henkilöt</h2>
+<button class="btn btn-primary" id="lisääUusiHenkilöNappi">Lisää uusi henkilö</button>
 
 <table class="table table-striped" id="henkilotList">
     <thead>

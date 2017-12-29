@@ -60,22 +60,44 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
 
             bool OK = false;
 
-            Henkilot dbItem = (from h in entities.Henkilot
-                                where h.HenkiloId == id
-                                select h).FirstOrDefault();
-            //kopioidaan selaimelta saadut tiedot tietokantaan, jos kentän arvo ei ole nolla
-            if (dbItem != null)
+            //onko kyseessä uusi lisäys vai vanhan muokkaus
+            if (id.ToString() == "(lisätään automaattisesti)")
             {
-                dbItem.HenkiloId = henk.HenkiloId;
-                dbItem.Etunimi = henk.Etunimi;
-                dbItem.Sukunimi = henk.Sukunimi;
-                dbItem.Sukunimi = henk.Sukunimi;
-                dbItem.Osoite = henk.Osoite;
-                dbItem.Esimies = henk.Esimies;
-
+                //uuden lisääminen eli kopioidaan kentät
+                Henkilot dbItem = new Henkilot()
+                {
+                    //otetaan CompanyNamesta Substring funktiolla 5 ensimmäistä merkkiä, jos loppuu
+                    //välilyöntiin tehdään Trim()
+                    HenkiloId = int.Parse(henk.Etunimi.Substring(0, 3).Trim().ToUpper()),
+                    Etunimi = henk.Etunimi,
+                    Sukunimi = henk.Sukunimi,
+                    Osoite = henk.Osoite,
+                    Esimies = henk.Esimies
+            };
+                //tallennetaan uusi lisäys tietokantaan
+                entities.Henkilot.Add(dbItem);
                 entities.SaveChanges();
-                //jos tietojen tallennus onnistuu asetetaan OK = true
                 OK = true;
+            }
+            else
+            {
+                Henkilot dbItem = (from h in entities.Henkilot
+                                   where h.HenkiloId == id
+                                   select h).FirstOrDefault();
+                //kopioidaan selaimelta saadut tiedot tietokantaan, jos kentän arvo ei ole nolla
+                if (dbItem != null)
+                {
+                    dbItem.HenkiloId = henk.HenkiloId;
+                    dbItem.Etunimi = henk.Etunimi;
+                    dbItem.Sukunimi = henk.Sukunimi;
+                    dbItem.Sukunimi = henk.Sukunimi;
+                    dbItem.Osoite = henk.Osoite;
+                    dbItem.Esimies = henk.Esimies;
+
+                    entities.SaveChanges();
+                    //jos tietojen tallennus onnistuu asetetaan OK = true
+                    OK = true;
+                }
             }
             entities.Dispose();
             return Json(OK);

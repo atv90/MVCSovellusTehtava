@@ -49,8 +49,6 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
         }
         public ActionResult Update(Projektit proj)
         {
-
-
             HarjoitustietokantaEntities entities = new HarjoitustietokantaEntities();
             //haetaan tietokannan rivi id:n perusteella
             int id = proj.ProjektiId;

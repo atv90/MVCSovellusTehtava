@@ -6,7 +6,7 @@
     <script type="text/javascript">
 
         function päivitäProjektilistaus() {
-            $.getJSON("/projektit/getlist", null, function (json) {
+             $.getJSON("/projektit/getlist", null, function (json) {
                 var projektit = JSON.parse(json);
                 //alert("test" + projektit.length);
                 var html = "";

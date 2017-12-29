@@ -60,18 +60,41 @@ namespace MVCSovellusTehtavaAnneVaittinen.Controllers
 
             bool OK = false;
 
-            Tunnit dbItem = (from t in entities.Tunnit
-                             where t.TuntiId == id
-                             select t).FirstOrDefault();
-            if (dbItem != null)
+            //onko kyseessä uusi lisäys vai vanhan muokkaus
+            if (id.ToString() == "(lisätään automaattisesti)")
             {
-                dbItem.ProjektiId = tun.ProjektiId;
-                dbItem.HenkiloId = tun.HenkiloId;
-                dbItem.Pvm = tun.Pvm;
-                dbItem.Tunnit1 = tun.Tunnit1;
-
+                //uuden lisääminen eli kopioidaan kentät
+                Tunnit dbItem = new Tunnit()
+                {
+                    //otetaan CompanyNamesta Substring funktiolla 5 ensimmäistä merkkiä, jos loppuu
+                    //välilyöntiin tehdään Trim()
+                    TuntiId = tun.TuntiId,
+                    ProjektiId = tun.ProjektiId,
+                    HenkiloId = tun.HenkiloId,
+                    Pvm = tun.Pvm,
+                    Tunnit1 = tun.Tunnit1
+                };
+                //tallennetaan uusi lisäys tietokantaan
+                entities.Tunnit.Add(dbItem);
                 entities.SaveChanges();
                 OK = true;
+            }
+            else
+            {
+
+                Tunnit dbItem = (from t in entities.Tunnit
+                                 where t.TuntiId == id
+                                 select t).FirstOrDefault();
+                if (dbItem != null)
+                {
+                    dbItem.ProjektiId = tun.ProjektiId;
+                    dbItem.HenkiloId = tun.HenkiloId;
+                    dbItem.Pvm = tun.Pvm;
+                    dbItem.Tunnit1 = tun.Tunnit1;
+
+                    entities.SaveChanges();
+                    OK = true;
+                }
             }
             entities.Dispose();
             return Json(OK);

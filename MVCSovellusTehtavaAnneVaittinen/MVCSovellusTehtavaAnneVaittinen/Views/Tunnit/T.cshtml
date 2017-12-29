@@ -45,13 +45,28 @@
                         $("#tuntiModalDialog").modal("show");
                     });
                 });
-
-
             });
         }
         //sivun alustaminen
         $(function () {
             päivitäTuntilistaus();
+
+            //uusien henkilöiden lisääminen manuaalisesti
+            $("#lisääUusiTuntiNappi").click(function () {
+
+                // tyhjennetään ikkunan tiedot
+                $("#tuntiModal_TuntiId").val("(lisätään automaattisesti)");
+                $("#tuntiModal_ProjektiId").val("(lisätään automaattisesti)");
+                $("#tuntiModal_HenkiloId").val("(lisätään automaattisesti)");
+                $("#tuntiModal_Pvm").val("");
+                $("#tuntiModal_Tunnit").val("");
+
+                //modaali-ikkunan otsikkokenttä
+                $("#tuntiModalTitle").text("Lisää uusi tunti");
+                //näytetään ikkuna
+                $("#tuntiModalDialog").modal("show");
+            });
+
 
             //modaali-ikkuna, tallenna-napin painaminen
             $("#tuntiModalTallennaNappi").click(function () {
@@ -81,6 +96,7 @@
     </script>
 }
 <h2>Tunnit</h2>
+<button class="btn btn-primary" id="lisääUusiTuntiNappi">Lisää uusi tunti</button>
 
 <table class="table table-bordered" id="tunnitList">
     <thead>
